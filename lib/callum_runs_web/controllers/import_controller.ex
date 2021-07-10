@@ -55,13 +55,11 @@ defmodule CallumRunsWeb.ImportController do
 
 
 
-  def import(conn, _params) do
-    {:ok, body, _} = Plug.Conn.read_body(conn)
-
-    parsed = body
+  def import(conn, %{"csv_data" => csv_data}) do
+    parsed = csv_data
     |> CSV.parse_string
     |> Enum.filter(fn [_date, _kcal, activity_type | _ ] -> activity_type == "Running" end)
-    |> Enum.map(fn [date, kcal, activity_type, distance_km, duration_s, elevation_ascended_m, elevation_maximum_m, elevation_minimum_m, heart_rate_a_pc, heart_rate_b_pc, heart_rate_c_pc, heart_rate_d_pc, heart_rate_e_pc, heart_rate_avg, heart_rate_max, mets_average, weather_humidity_pc, weather_temp_c] ->
+    |> Enum.map(fn [date, kcal, activity_type, distance_km, duration_s, elevation_ascended_m, elevation_maximum_m, elevation_minimum_m, heart_rate_a, heart_rate_b, heart_rate_c, heart_rate_d, heart_rate_e, heart_rate_avg, heart_rate_max, mets_average, weather_humidity_pc, weather_temp_c] ->
       {:ok, start_date_timestamp} = parse_date_range(date)
       %{
         timestamp: start_date_timestamp,
@@ -72,11 +70,11 @@ defmodule CallumRunsWeb.ImportController do
         elevation_ascended_m: elevation_ascended_m |> parse_number,
         elevation_maximum_m: elevation_maximum_m |> parse_number,
         elevation_minimum_m: elevation_minimum_m |> parse_number,
-        heart_rate_a_pc: heart_rate_a_pc |> parse_number,
-        heart_rate_b_pc: heart_rate_b_pc |> parse_number,
-        heart_rate_c_pc: heart_rate_c_pc |> parse_number,
-        heart_rate_d_pc: heart_rate_d_pc |> parse_number,
-        heart_rate_e_pc: heart_rate_e_pc |> parse_number,
+        heart_rate_a: heart_rate_a |> parse_number,
+        heart_rate_b: heart_rate_b |> parse_number,
+        heart_rate_c: heart_rate_c |> parse_number,
+        heart_rate_d: heart_rate_d |> parse_number,
+        heart_rate_e: heart_rate_e |> parse_number,
         heart_rate_avg: heart_rate_avg |> parse_number,
         heart_rate_max: heart_rate_max |> parse_number,
         mets_average: mets_average |> parse_number,
@@ -84,8 +82,6 @@ defmodule CallumRunsWeb.ImportController do
         weather_temp_c: weather_temp_c |> parse_number,
       }
     end)
-
-    IO.inspect(parsed)
 
     conn
     |> put_status(:ok)
