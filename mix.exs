@@ -44,6 +44,7 @@ defmodule CallumRuns.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:nimble_csv, "~> 1.1"},
       {:httpoison, "~> 1.8"},
+      {:decimal, "~> 2.0"}
     ]
   end
 
