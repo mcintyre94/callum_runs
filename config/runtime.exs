@@ -36,6 +36,13 @@ graphjson_project = System.get_env("GRAPHJSON_PROJECT") ||
   This should be eg. callum_runs_dev
   """
 
+private_api_key = System.get_env("PRIVATE_API_KEY") ||
+  raise """
+  environment variable PRIVATE_API_KEY is missing.
+  You can generate one by calling: mix phx.gen.secret
+  """
+
 config :callum_runs, CallumRunsWeb.Endpoint,
   graphjson_api_key: graphjson_api_key,
-  graphjson_project: graphjson_project
+  graphjson_project: graphjson_project,
+  private_api_key: private_api_key

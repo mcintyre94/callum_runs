@@ -60,11 +60,11 @@ defmodule CallumRunsWeb.ImportController do
       timestamp: event.timestamp,
     }
 
-    HTTPoison.post!(
-      "https://www.graphjson.com/api/log",
-      Jason.encode!(payload),
-      %{"Content-Type": "application/json"}
-    )
+    # HTTPoison.post!(
+    #   "https://www.graphjson.com/api/log",
+    #   Jason.encode!(payload),
+    #   %{"Content-Type": "application/json"}
+    # )
 
     Logger.info("Logged event to graphjson: #{inspect(event)}")
   end

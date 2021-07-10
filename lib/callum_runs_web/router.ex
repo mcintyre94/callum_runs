@@ -9,8 +9,20 @@ defmodule CallumRunsWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  @spec verify_api_key(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def verify_api_key(conn, _opts) do
+    api_key = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:private_api_key]
+    request_api_key = Plug.Conn.get_req_header(conn, "api-key")
+    if request_api_key == [api_key] do
+      conn
+    else
+      conn |> put_status(:unauthorized) |> text("Missing or incorrect api-key")
+    end
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
+    plug :verify_api_key
   end
 
   scope "/", CallumRunsWeb do
