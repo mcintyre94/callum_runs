@@ -54,8 +54,6 @@ defmodule CallumRunsWeb.ImportController do
   end
 
   defp log(%{} = event) do
-    event = event |> Map.put(:project, "callum_runs")
-
     payload = %{
       api_key: Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_api_key],
       json: Jason.encode!(event),
@@ -72,6 +70,8 @@ defmodule CallumRunsWeb.ImportController do
   end
 
   def import(conn, %{"csv_data" => csv_data}) do
+    project = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_project]
+
     parsed = csv_data
     |> CSV.parse_string
     |> Enum.filter(fn [_date, _kcal, activity_type | _ ] -> activity_type == "Running" end)
@@ -96,6 +96,7 @@ defmodule CallumRunsWeb.ImportController do
         mets_average: mets_average |> parse_number,
         weather_humidity_pc: weather_humidity_pc |> parse_number,
         weather_temp_c: weather_temp_c |> parse_number,
+        project: project,
       }
     end)
 

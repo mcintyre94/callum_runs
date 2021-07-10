@@ -24,9 +24,18 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 end
 
+graphjson_api_key = System.get_env("GRAPHJSON_API_KEY") ||
+  raise """
+  environment variable GRAPHJSON_API_KEY is missing.
+  This can be obtained from the graphjson.com dashboard
+  """
+
+graphjson_project = System.get_env("GRAPHJSON_PROJECT") ||
+  raise """
+  environment variable GRAPHJSON_PROJECT is missing.
+  This should be eg. callum_runs_dev
+  """
+
 config :callum_runs, CallumRunsWeb.Endpoint,
-  graphjson_api_key: System.get_env("GRAPHJSON_API_KEY") ||
-    raise """
-    environment variable GRAPHJSON_API_KEY is missing.
-    This can be obtained from the graphjson.com dashboard
-    """
+  graphjson_api_key: graphjson_api_key,
+  graphjson_project: graphjson_project
