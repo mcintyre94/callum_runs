@@ -1,38 +1,14 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>Peace of mind from prototype to production</p>
-</section>
-
-<section class="row">
-  <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.5/CHANGELOG.md">v1.5 Changelog</a>
-      </li>
-    </ul>
+<section style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap:20px;">
+  <article>
+    <!-- Distance (km) -->
+    <iframe height="400px" width="100%" src="https://graphjson.com/embed?p=aU2FsdGVkX18K9eyvVmT%2Bu7d%2F2PN8gFlFh6NhRUKwAMk1DmGKuihjkKlch0fCICyoq6drSzApAqXeQ5hxHfKqFTMT9gw9fknOb6D5xUgF%2FzpGwmmZj9w%2BOi6%2BZ%2F%2Bzs8wFIaM0xJ7sxnjnyzAMIrFZYjKo9KKPPV6VtOx5Z5wB8PotwL90sgQ4OkyDZl62NABMAUp1Fg2j2CvXZRTn1Ex8b%2FaJR%2BlbURzPPQz6fvQm5DckbQPs90XJrOYNdGVyha%2FwuB4nRk0S%2F47FwrDUJt0gI5MPuhf1s1pPmzUvqdmj4VjiWLgCFtND0xGioKymIbSoo0Od4mFW9qQ8LHEwaG6af1YA%2B72zNb%2B90BZ1JkMdFqzBOXyBVD6X8NbsHzEj5VEUvnnLBi1kImuDAfIXQYBfKmtkRootvWYv0rEL662B02Dldrnd7hs2tHuQRKTBLBLYtE3rciXm3Mw7bVJm%2BIi67VoA0CiRqEFWH07fkYf7OU70bDBPowq8uhPEKcmkS2%2BuXnc%2FSgdpioNsvgCp6OckbqXYjFfbk5HBV6G36iDgh%2FIVwuLSIFTW0%2FZLvGWsD33f8gPJMuyGxmNyTMaXysUyfx9qah%2BiFkFJxCK2mz%2BO%2F9VgaskUpvNVZ1tAbni%2BEpC2qVn3B1pqapFSX99KBLyIqXtzC1y%2FfjgfAj3%2BIrD5jMNIYp43c8E9B9iXEFnu1ZGS"></iframe>
   </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-      <li>
-        <a href="https://elixir-slackin.herokuapp.com/">Elixir on Slack</a>
-      </li>
-    </ul>
+  <article>
+    <!-- Duration (s) -->
+    <iframe height="400px" width="100%" src="https://graphjson.com/embed?p=aU2FsdGVkX18mPjYb9m0jJkeacoOnGAFVugUO6BzcYd9F2DAwSvZV9wToyZM19%2F2QEQkDSy4LRyIdpcz5AGFZi0qCP1kZnPi2e2EjM8Ec0QNOblApo3CZ2EXnz3xv5K%2Bsi7rPGLTDF7J9%2BQiKP6orLzaXmAwOTi8T9g4zinQow7IjLhH76oC1f8w5CKS2YSSFVRtTAW5zaXXqOiN5WPsL9BwEHhYzZ3hOCEtSN6M%2BI9aNNQEV565TrZRIDYlQF2j7kyE8pvNt30uRmfNgKE9pT6Duvcn6yjbCY8xlL%2Bko0nQPm3t8aWRLnFrLZgpnQ6jGi1TMwO4dPpIjwxIOvUK09EcF4snfnph7zsl7HGc4ZF4ah7f12Ztijt86au%2BOQ%2FhT0TQmalehR2%2BbHkW%2FgDGUSS69vPPsUC4TxqqxDs4FyJ3qRao2o88rKxKgYIYM1k6z0Vg%2Bg78yfbOp10b3Vgtm63C2rwOcvcXWc%2FYSIx2SscflqL9kxMucYQuz1ojMPdxfK73EZiSUm2OwcYS6m5ac3FIK7OvFKzRjB2673jtzW43SqBUcyQGbxSbe7ZWo1GWa2OkB%2B2337%2FFESI3plUY2W%2FFMk8PMk5YgjLM7w0mCEm%2BXM37KRoGPwI0R07wd%2BkgzOyWQUNPcaU0f%2BK%2FG6yksh4pG8nxFqx0hsfq4n%2BS8NnHf1ZxCWHBJlTrLUmtgxUtC"></iframe>
+  </article>
+  <article>
+    <!-- Avg HR -->
+    <iframe height="400px" width="100%" src= "https://graphjson.com/embed?p=aU2FsdGVkX1%2FyMEbKXn2oVx5RsO%2BJVjwSTFJTPeBptLgN38TG0jBBMOI6kPbbVb9f4HI6zrPT4byEjNJRDRj%2BWza6U507nEugCjlPpzUB1Fdso9HrHcobEEJT5Nom49wosiAH6FklkNiI6TDPJsOgyPjpWhcaXctJDYsnjOgSD3QRWoVVBiLpg9eiaK1S3LMfsJoAs5jrdnu0M2VdnwVaG%2F13tCAarNZAkGOyuMGYn%2BXFMq6bllseiHiE%2BI92zzXA%2BRZBKEPSXbe2DTW007GLifXlaGfGk7Yc0VCZEtcM1zsFq%2F%2Bhr8QBLsOQ9EzRLjnN%2B2aveg%2FjK94X9C7LKLwRJq28f91kUsRgd%2F7vlI0drbd6B52IhKixEm%2FF3K%2Bo8qFhEWyumTYpIUreoJF1KntEIYOr1WHXBL1G7Vb6dj1JwMeCA7G9QF36xJPWqWuJr4pausFeA%2B9rKHqDPQD2ageo38DShR7cNWjgC5eeGS2VKtsikd79xJMz6igAg5MudPepHtI1XsSDCFwX90zSLOOe18YFfkNT%2Fisq6v30HvVWPKkPT%2FJ7Gli04Da9mm35qJ9jyTO4t7aOaLOgI0pbdOxvMbWEoyENXGjKKEHMOIKcqIvaqvslJPcLlZr7vJ5%2FjtZvRcajwACk1vQdu7DK6n9ToCNOkfkfWHEDfSf5lpA7wciqhBGAbzd209%2FQ5wRM4tcX"></iframe>
   </article>
 </section>
