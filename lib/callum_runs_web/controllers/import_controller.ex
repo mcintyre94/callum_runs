@@ -53,7 +53,23 @@ defmodule CallumRunsWeb.ImportController do
     end
   end
 
+  defp log(%{} = event) do
+    event = event |> Map.put(:project, "callum_runs")
 
+    payload = %{
+      api_key: Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_api_key],
+      json: Jason.encode!(event),
+      timestamp: event.timestamp,
+    }
+
+    HTTPoison.post!(
+      "https://www.graphjson.com/api/log",
+      Jason.encode!(payload),
+      %{"Content-Type": "application/json"}
+    )
+
+    Logger.info("Logged event to graphjson: #{inspect(event)}")
+  end
 
   def import(conn, %{"csv_data" => csv_data}) do
     parsed = csv_data
@@ -82,6 +98,8 @@ defmodule CallumRunsWeb.ImportController do
         weather_temp_c: weather_temp_c |> parse_number,
       }
     end)
+
+    for event <- parsed, do: log(event)
 
     conn
     |> put_status(:ok)

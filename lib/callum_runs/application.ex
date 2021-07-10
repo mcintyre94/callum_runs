@@ -12,7 +12,7 @@ defmodule CallumRuns.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: CallumRuns.PubSub},
       # Start the Endpoint (http/https)
-      CallumRunsWeb.Endpoint
+      CallumRunsWeb.Endpoint,
       # Start a worker by calling: CallumRuns.Worker.start_link(arg)
       # {CallumRuns.Worker, arg}
     ]
