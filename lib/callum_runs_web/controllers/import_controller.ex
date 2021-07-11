@@ -70,7 +70,7 @@ defmodule CallumRunsWeb.ImportController do
     Logger.info("Logged event to graphjson: #{inspect(event)}")
   end
 
-  def get_existing_timestamps(graphjson_api_key, project) do
+  defp get_existing_timestamps(graphjson_api_key, project) do
     payload = %{
       api_key: graphjson_api_key,
       IANA_time_zone: "Europe/London",
@@ -105,12 +105,18 @@ defmodule CallumRunsWeb.ImportController do
     |> Enum.filter(fn [_date, _kcal, activity_type | _ ] -> activity_type == "Running" end)
     |> Enum.map(fn [date, kcal, activity_type, distance_km, duration_s, elevation_ascended_m, elevation_maximum_m, elevation_minimum_m, heart_rate_a, heart_rate_b, heart_rate_c, heart_rate_d, heart_rate_e, heart_rate_avg, heart_rate_max, mets_average, weather_humidity_pc, weather_temp_c] ->
       {:ok, start_date_timestamp} = parse_date_range(date)
+      duration_mins = duration_s |> parse_number |> Decimal.from_float |> Decimal.div(60)
+      distance_km = distance_km |> parse_number |> Decimal.from_float
+      pace_mins_per_km = Decimal.div(duration_mins, distance_km) |> Decimal.round(2) |> Decimal.to_float
+
       %Event{
+        project: project,
         timestamp: start_date_timestamp,
         kcal: kcal |> parse_number,
         activity_type: activity_type,
-        distance_km: distance_km |> parse_number,
-        duration_mins_f: duration_s |> parse_number |> Decimal.from_float |> Decimal.div(60) |> Decimal.round(1) |> Decimal.to_float,
+        distance_km: distance_km |> Decimal.to_float,
+        duration_mins_f: duration_mins |> Decimal.round(1) |> Decimal.to_float,
+        pace_mins_per_km: pace_mins_per_km,
         elevation_ascended_m: elevation_ascended_m |> parse_number,
         elevation_maximum_m: elevation_maximum_m |> parse_number,
         elevation_minimum_m: elevation_minimum_m |> parse_number,
@@ -124,7 +130,6 @@ defmodule CallumRunsWeb.ImportController do
         mets_average: mets_average |> parse_number,
         weather_humidity_pc: weather_humidity_pc |> parse_number,
         weather_temp_c: weather_temp_c |> parse_number,
-        project: project,
       }
     end)
     |> Enum.filter(&(&1.activity_type == "Running"))
