@@ -1,4 +1,5 @@
 alias NimbleCSV.RFC4180, as: CSV
+alias CallumRunsWeb.Graphjson.Event
 require Logger
 
 defmodule CallumRunsWeb.ImportController do
@@ -53,9 +54,9 @@ defmodule CallumRunsWeb.ImportController do
     end
   end
 
-  defp log(%{} = event) do
+  defp log(%{} = event, graphjson_api_key) do
     payload = %{
-      api_key: Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_api_key],
+      api_key: graphjson_api_key,
       json: Jason.encode!(event),
       timestamp: event.timestamp,
     }
@@ -69,15 +70,42 @@ defmodule CallumRunsWeb.ImportController do
     Logger.info("Logged event to graphjson: #{inspect(event)}")
   end
 
+  def get_existing_timestamps(graphjson_api_key, project) do
+    payload = %{
+      api_key: graphjson_api_key,
+      IANA_time_zone: "Europe/London",
+      graph_type: "Samples",
+      start: "1 day ago",
+      end: "now",
+      filters: [["project","=",project]],
+    }
+
+    result = HTTPoison.post!(
+      "https://www.graphjson.com/api/visualize/data",
+      Jason.encode!(payload),
+      %{"Content-Type": "application/json"}
+    )
+
+    # Body is JSON with a "result" key containing {"event", "timestamp"} objects
+    result.body
+    |> Jason.decode!
+    |> Map.get("result")
+    |> Enum.map(&(&1["timestamp"]))
+  end
+
   def import(conn, %{"csv_data" => csv_data}) do
     project = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_project]
+    graphjson_api_key = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_api_key]
+
+    # Get existing timestamps of events in graphjson today
+    existing_timestamps = get_existing_timestamps(graphjson_api_key, project)
 
     parsed = csv_data
     |> CSV.parse_string
     |> Enum.filter(fn [_date, _kcal, activity_type | _ ] -> activity_type == "Running" end)
     |> Enum.map(fn [date, kcal, activity_type, distance_km, duration_s, elevation_ascended_m, elevation_maximum_m, elevation_minimum_m, heart_rate_a, heart_rate_b, heart_rate_c, heart_rate_d, heart_rate_e, heart_rate_avg, heart_rate_max, mets_average, weather_humidity_pc, weather_temp_c] ->
       {:ok, start_date_timestamp} = parse_date_range(date)
-      %{
+      %Event{
         timestamp: start_date_timestamp,
         kcal: kcal |> parse_number,
         activity_type: activity_type,
@@ -99,8 +127,10 @@ defmodule CallumRunsWeb.ImportController do
         project: project,
       }
     end)
+    |> Enum.filter(&(&1.activity_type == "Running"))
+    |> Enum.filter(&(!Enum.member?(existing_timestamps, &1.timestamp)))
 
-    for event <- parsed, do: log(event)
+    for event <- parsed, do: log(event, graphjson_api_key)
 
     conn
     |> put_status(:ok)
