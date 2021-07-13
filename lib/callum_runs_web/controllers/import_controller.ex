@@ -139,6 +139,6 @@ defmodule CallumRunsWeb.ImportController do
 
     conn
     |> put_status(:ok)
-    |> json(parsed)
+    |> text("#{Enum.count(parsed)} events logged")
   end
 end
