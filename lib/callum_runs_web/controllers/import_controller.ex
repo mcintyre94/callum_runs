@@ -94,11 +94,15 @@ defmodule CallumRunsWeb.ImportController do
   end
 
   def import(conn, %{"csv_data" => csv_data}) do
+    Logger.info("TEMP: csv_data, #{inspect(csv_data)}")
+
     project = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_project]
     graphjson_api_key = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_api_key]
 
     # Get existing timestamps of events in graphjson today
     existing_timestamps = get_existing_timestamps(graphjson_api_key, project)
+
+    Logger.info("TEMP: existing_timestamps, #{inspect(existing_timestamps)}")
 
     parsed = csv_data
     |> CSV.parse_string
@@ -134,6 +138,8 @@ defmodule CallumRunsWeb.ImportController do
     end)
     |> Enum.filter(&(&1.activity_type == "Running"))
     |> Enum.filter(&(!Enum.member?(existing_timestamps, &1.timestamp)))
+
+    Logger.info("TEMP: parsed, #{inspect(parsed)}")
 
     for event <- parsed, do: log(event, graphjson_api_key)
 
