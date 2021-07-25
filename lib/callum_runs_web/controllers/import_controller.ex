@@ -94,29 +94,26 @@ defmodule CallumRunsWeb.ImportController do
   end
 
   def import(conn, %{"csv_data" => csv_data}) do
-    Logger.info("TEMP: csv_data, #{inspect(csv_data)}")
-
-    project = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_project]
+    project_runs = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_project_runs]
+    project_zones = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_project_zones]
     graphjson_api_key = Application.get_env(:callum_runs, CallumRunsWeb.Endpoint)[:graphjson_api_key]
 
     # Get existing timestamps of events in graphjson today
-    existing_timestamps = get_existing_timestamps(graphjson_api_key, project)
-
-    Logger.info("TEMP: existing_timestamps, #{inspect(existing_timestamps)}")
+    existing_timestamps = get_existing_timestamps(graphjson_api_key, project_runs)
 
     parsed = csv_data
     |> CSV.parse_string
     |> Enum.filter(fn [_date, _kcal, activity_type | _ ] -> activity_type == "Running" end)
     # Note: There may be [weather_humidity_pct, weather_temp_c] columns at the end but these seem to be missing on running workouts(!)
     # They're excluded from the match because when there's only a running workout we need this to still match
-    |> Enum.map(fn [date, kcal, activity_type, distance_km, duration_s, elevation_ascended_m, elevation_maximum_m, elevation_minimum_m, heart_rate_a, heart_rate_b, heart_rate_c, heart_rate_d, heart_rate_e, heart_rate_avg, heart_rate_max, mets_average | _] ->
+    |> Enum.flat_map(fn [date, kcal, activity_type, distance_km, duration_s, elevation_ascended_m, elevation_maximum_m, elevation_minimum_m, heart_rate_a, heart_rate_b, heart_rate_c, heart_rate_d, heart_rate_e, heart_rate_avg, heart_rate_max, mets_average | _] ->
       {:ok, start_date_timestamp} = parse_date_range(date)
       duration_mins = duration_s |> parse_number |> Decimal.from_float |> Decimal.div(60)
       distance_km = distance_km |> parse_number |> Decimal.from_float
       pace_mins_per_km = Decimal.div(duration_mins, distance_km) |> Decimal.round(2) |> Decimal.to_float
 
-      %Event{
-        project: project,
+      event = %Event{
+        project: project_runs,
         timestamp: start_date_timestamp,
         kcal: kcal |> parse_number,
         activity_type: activity_type,
@@ -135,11 +132,13 @@ defmodule CallumRunsWeb.ImportController do
         heart_rate_max: heart_rate_max |> parse_number,
         mets_average: mets_average |> parse_number
       }
+
+      zone_events = ZoneEvent.from_event(event, project_zones)
+      [event | zone_events]
     end)
-    |> Enum.filter(&(&1.activity_type == "Running"))
     |> Enum.filter(&(!Enum.member?(existing_timestamps, &1.timestamp)))
 
-    Logger.info("TEMP: parsed, #{inspect(parsed)}")
+    Logger.info("Parsed to #{Enum.count(parsed)} events to log, after filtering #{Enum.count(existing_timestamps)} already logged timestamps")
 
     for event <- parsed, do: log(event, graphjson_api_key)
 

@@ -30,10 +30,16 @@ graphjson_api_key = System.get_env("GRAPHJSON_API_KEY") ||
   This can be obtained from the graphjson.com dashboard
   """
 
-graphjson_project = System.get_env("GRAPHJSON_PROJECT") ||
+graphjson_project_runs = System.get_env("GRAPHJSON_PROJECT_RUNS") ||
   raise """
-  environment variable GRAPHJSON_PROJECT is missing.
+  environment variable GRAPHJSON_PROJECT_RUNS is missing.
   This should be eg. callum_runs_dev
+  """
+
+graphjson_project_zones = System.get_env("GRAPHJSON_PROJECT_ZONES") ||
+  raise """
+  environment variable GRAPHJSON_PROJECT_ZONES is missing.
+  This should be eg. hr_zones_dev
   """
 
 private_api_key = System.get_env("PRIVATE_API_KEY") ||
@@ -44,5 +50,6 @@ private_api_key = System.get_env("PRIVATE_API_KEY") ||
 
 config :callum_runs, CallumRunsWeb.Endpoint,
   graphjson_api_key: graphjson_api_key,
-  graphjson_project: graphjson_project,
+  graphjson_project_runs: graphjson_project_runs,
+  graphjson_project_zones: graphjson_project_zones,
   private_api_key: private_api_key

@@ -6,7 +6,8 @@ kill_signal = "SIGTERM"
 kill_timeout = 5
 
 [env]
-  GRAPHJSON_PROJECT = "callum_runs_prod_v2"
+  GRAPHJSON_PROJECT_RUNS = "callum_runs_prod_v2"
+  GRAPHJSON_PROJECT_ZONES = "hr_zones_prod_v1"
 
 [experimental]
   allowed_public_ports = []
