@@ -1,4 +1,4 @@
-name: Fly Deploy
+name: Test + Deploy
 on:
   push:
     branches:
@@ -6,7 +6,25 @@ on:
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    env:
+      GRAPHJSON_API_KEY: fake_key
+      GRAPHJSON_PROJECT_RUNS: fake_project
+      GRAPHJSON_PROJECT_ZONES: fake_project
+      PRIVATE_API_KEY: fake_key
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '23.3.4'
+          elixir-version: '1.12.0'
+      - run: mix deps.get
+      - run: mix test
+
   deploy:
+      needs: test # Only run if tests pass
       name: Deploy app
       runs-on: ubuntu-latest
       steps:
