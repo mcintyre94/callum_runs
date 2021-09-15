@@ -75,7 +75,7 @@ defmodule CallumRunsWeb.ImportController do
       api_key: graphjson_api_key,
       IANA_time_zone: "Europe/London",
       graph_type: "Samples",
-      start: "1 day ago",
+      start: "30 days ago",
       end: "now",
       filters: [["project","=",project]],
     }
